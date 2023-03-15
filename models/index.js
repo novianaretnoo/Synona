@@ -21,4 +21,10 @@ db.Sequlize = Sequlize
 db.sequelize = sequelize
 
 db.quizzes = require('./quiz')(sequelize, Sequlize)
+db.fsynonims = require('./synonim/faktorsynonim')(sequelize, Sequlize)
+db.jsynonims = require('./synonim/jenissynonim')(sequelize, Sequlize)
+db.santonims = require('./antonim/sifatantonim')(sequelize, Sequlize)
+db.jantonims = require('./antonim/jenisantonim')(sequelize, Sequlize)
+db.kamussynos = require('./synonim/kamus')(sequelize, Sequlize)
+db.kamusantos = require('./antonim/kamus')(sequelize, Sequlize)
 module.exports = db

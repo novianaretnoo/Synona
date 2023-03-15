@@ -5,6 +5,8 @@ const port = 5000;
 //mengambil route quiz dan route jobsheet
 const quizRoute = require('./router/quiz')
 const jobsheetRoute = require('./router/jobsheet')
+const synonimRoute = require('./router/synonim')
+const antonimRoute = require('./router/antonim')
 
 app.use(cors());
 app.use(express.json()); 
