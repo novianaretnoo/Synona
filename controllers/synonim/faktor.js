@@ -1,11 +1,10 @@
 const db = require('../../models');
 const FaktorSynon = db.fsynonims;
-const { Sequelize } = require('sequelize');
 
 exports.create = async (req, res) => {
     if (!req.body.factorTime || !req.body.factorPlace || !req.body.factorFormal || !req.body.factorSocial || !req.body.factorActivity || !req.body.factorNuansa) {
         res.json({
-            status: 400,
+            status: 200,
             message: "Sepertinya ada terlewat, coba ulang dan tidak boleh kosong!",
             data: null
         });
@@ -22,12 +21,14 @@ exports.create = async (req, res) => {
 
     try {
         const Createfs = await FaktorSynon.create(CekFaktorSynonim);
-        res.json({ 
+        res.status(201).json({
+            status: 201, 
             message: "Sukses, Data faktor synonim berhasil ditambahkan", 
             data: Createfs 
         });
     }catch (error) {
         res.json({ 
+            status: 500,
             message: error.message || "Server Error", 
             data: null 
         });
@@ -35,10 +36,10 @@ exports.create = async (req, res) => {
 }
 
 exports.getAll = async (req, res) => {
-
     try {
         const GetDatafs = await FaktorSynon.findAll();
         res.json({
+            status: 200,
             message: "Suksess, Semua data Faktor Synonim berhasil ditemukan",
             data: GetDatafs
         });
@@ -53,34 +54,63 @@ exports.getAll = async (req, res) => {
 }
 
 // //optional, mau dipake atau engga
-exports.getById = async (req, res) => {
-    const id = req.params.id;
-
-    try {
-        const GetDatafs = await FaktorSynon.findOne({
-            where: {
-                id: id
-            }
-        });
-        res.json({
-            message: "Suksess, Data Faktor Synonim berhasil ditemukan",
-            data: GetDatafs
-        });
-    } catch (error) {
-        res.json({
-            status: 500,
-            message: error.message || "Server Error",
-            data: null
-        });
-    }
-}
+// exports.getById = async (req, res) => {
+//     const id = req.params.id;
+//     const nomor = await FaktorSynon.count({ where: { id: id } });
+//     if (NaN(id)) {
+//         res.json({
+//             status: 400,
+//             message: "Id tidak boleh kosong dan harus angka",
+//             data: null
+//         });
+//         return;
+//     } else if (nomor == 0) {
+//         res.json({
+//             status: 200,
+//             message: "Data Faktor Synonim tidak ditemukan",
+//             data: null
+//         });
+//         return;
+//     }
+//     try {
+//         const GetDatafs = await FaktorSynon.findOne({
+//             where: {
+//                 id: id
+//             }
+//         });
+//         res.json({
+//             message: "Suksess, Data Faktor Synonim berhasil ditemukan",
+//             data: GetDatafs
+//         });
+//     } catch (error) {
+//         res.json({
+//             status: 500,
+//             message: error.message || "Server Error",
+//             data: null
+//         });
+//     }
+// }
 
 exports.update = async (req, res) => {
     const id = req.params.id;
-
-    if (!req.body.factorTime || !req.body.factorPlace || !req.body.factorFormal || !req.body.factorSocial || !req.body.factorActivity || !req.body.factorNuansa) {
+    const nomor = await FaktorSynon.count({ where: { id: id } });
+    if (NaN(id)) {
         res.json({
-            status: 400,
+            status: 200,
+            message: "Id tidak boleh kosong dan harus angka",
+            data: null
+        });
+        return;
+    } else if (nomor == 0) {
+        res.status(404).json({
+            status: 404,
+            message: "Data Faktor Synonim tidak ditemukan",
+            data: null
+        });
+        return;
+    } else if (!req.body.factorTime || !req.body.factorPlace || !req.body.factorFormal || !req.body.factorSocial || !req.body.factorActivity || !req.body.factorNuansa) {
+        res.json({
+            status: 200,
             message: "Sepertinya ada terlewat, coba ulang dan tidak boleh kosong!",
             data: null
         });
@@ -101,7 +131,7 @@ exports.update = async (req, res) => {
             }
         });
         res.json({
-            message: "Suksess, Data Faktor Synonim berhasil diupdate",
+            message: `Suksess, Data Faktor Synonim dengan ID ${id} berhasil diupdate`,
             data: Updatefs
         });
     } catch (error) {
@@ -115,7 +145,22 @@ exports.update = async (req, res) => {
 
 exports.delete = async (req, res) => {
     const id = req.params.id;
-
+    const nomor = await FaktorSynon.count({ where: { id: id } });
+    if (NaN(id)) {
+        res.json({
+            status: 200,
+            message: "Id tidak boleh kosong dan harus angka",
+            data: null
+        });
+        return;
+    } else if (nomor == 0) {
+        res.status(404).json({
+            status: 404,
+            message: "Data Faktor Synonim tidak ditemukan",
+            data: null
+        });
+        return;
+    }
     try {
         const Deletefs = await FaktorSynon.destroy({
             where: {
@@ -123,7 +168,7 @@ exports.delete = async (req, res) => {
             }
         });
         res.json({
-            message: "Suksess, Data Faktor Synonim berhasil dihapus",
+            message: `Suksess, Data Faktor Synonim dengan ID ${id} berhasil dihapus`,
             data: Deletefs
         });
     } catch (error) {

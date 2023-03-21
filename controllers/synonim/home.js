@@ -1,28 +1,28 @@
 const db = require('../../models');
-const KamusAntonim = db.kamusantos;
+const HomeSynonim = db.hsynonims;
 
 exports.create = async (req, res) => {
-    if (!req.body.namaAwal || !req.body.namaLawan) {
+    if (!req.body.para1 || !req.body.para2 || !req.body.para3) {
         res.json({
             status: 200,
-            message: "Sepertinya ada terlewat, coba isi ulang data dan tidak boleh kosong!",
+            message: "Sepertinya ada terlewat, coba isi ulang dan tidak boleh kosong!",
             data: null
         });
-        return;
+        return; 
     }
-    const CekKamusAntonim = {
-        namaAwal: req.body.namaAwal,
-        namaLawan: req.body.namaLawan,
-    }
+    const CekHomeSynonim = {
+        para1: req.body.para1,
+        para2: req.body.para2,
+        para3: req.body.para3,
+    };
     try {
-        const createKamusAntonim = await KamusAntonim.create(CekKamusAntonim);
+        const CreateHa = await HomeSynonim.create(CekHomeSynonim);
         res.status(201).json({
             status: 201,
-            message: "Sukses, Data Kamus Antonim berhasil ditambahkan",
-            data: createKamusAntonim
+            message: "Sukses, Data home synonim berhasil ditambahkan",
+            data: CreateHa
         });
-    }
-    catch (error) {
+    } catch (error) {
         res.json({
             status: 500,
             message: error.message || "Server Error",
@@ -33,19 +33,19 @@ exports.create = async (req, res) => {
 
 exports.getAll = async (req, res) => {
     try {
-        const GetDataKamusAntonim = await KamusAntonim.findAll();
-        if (GetDataKamusAntonim.length == 0) {
+        const GetHa = await HomeSynonim.findAll()
+        if (GetHa.length == 0) {
             res.json({
                 status: 200,
-                message: "Data Kamus Antonim ditemukan, tapi masih kosong",
+                message: "Data home ditemukan, tapi masih kosong",
                 data: null
             });
             return;
-        } else  {
+        } else {
             res.json({
                 status: 200,
-                message: "Sukses, Semua data Kamus Antonim berhasil ditemukan",
-                data: GetDataKamusAntonim
+                message: "Sukses, Semua data home synonim berhasil ditemukan",
+                data: GetHa
             });
         }
     } catch (error) {
@@ -59,9 +59,9 @@ exports.getAll = async (req, res) => {
 
 //optional, mau dipake atau engga
 // exports.getById = async (req, res) => {
-//     const id = req.params.id;
-//     const nomor = await KamusAntonim.count({ where: { id: id } });
-//     if (isNaN(id)) {
+//     const id  = req.params.id;
+//     const nomor = await HomeSynonim.count({ where: { id: id } });
+//     if (NaN(id)) {
 //         res.json({
 //             status: 200,
 //             message: "Id harus berupa angka",
@@ -70,18 +70,18 @@ exports.getAll = async (req, res) => {
 //         return;
 //     } else if (nomor == 0) {
 //         res.status(404).json({
-//             status: 404,
+//             status: 400,
 //             message: "Id tidak ditemukan",
 //             data: null
 //         });
 //         return;
 //     }
 //     try {
-//         const GetDataKamusAntonim = await KamusAntonim.findByPk(id);
+//         const GetHa = await HomeSynonim.findOne({ where: { id: id } });
 //         res.json({
 //             status: 200,
-//             message: "Suksess, Data Kamus Antonim berhasil ditemukan",
-//             data: GetDataKamusAntonim
+//             message: "Sukses, Data home synonim berhasil ditemukan",
+//             data: GetHa
 //         });
 //     } catch (error) {
 //         res.json({
@@ -94,44 +94,40 @@ exports.getAll = async (req, res) => {
 
 exports.update = async (req, res) => {
     const id = req.params.id;
-    const nomor = await KamusAntonim.count({ where: { id: id } });
-
+    const nomor = await HomeSynonim.count({ where: { id: id } });
     if (isNaN(id)) {
         res.json({
             status: 200,
-            message: "Id harus berupa angka",
+            message: "id harus berupa angka",
             data: null
         });
         return;
-    }
-    else if (nomor == 0) {
+    } else if (nomor == 0) {
         res.status(404).json({
             status: 404,
-            message: "Id tidak ditemukan",
+            message: "id tidak ditemukan",
             data: null
         });
         return;
-    } else if (!req.body.namaAwal || !req.body.namaLawan) {
+    } else if (!req.body.para1 || !req.body.para2 || !req.body.para3) {
         res.json({
-            status: 400,
-            message: "Sepertinya ada terlewat, coba ulang dan tidak boleh kosong!",
+            status: 200,
+            message: "Sepertinya ada terlewat, coba isi ulang dan tidak boleh kosong!",
             data: null
         });
         return;
     }
-    
-    const CekKamusAntonim = {
-        namaAwal: req.body.namaAwal,
-        namaLawan: req.body.namaLawan,
+    const CekHomeSynonim = {
+        para1: req.body.para1,
+        para2: req.body.para2,
+        para3: req.body.para3,
     };
     try {
-        const updateKamusAntonim = await KamusAntonim.update(CekKamusAntonim, {
-            where: { id: id }
-        });
+        const UpdateHa = await HomeSynonim.update(CekHomeSynonim, { where: { id: id } });
         res.json({
             status: 200,
-            message: `Sukses, Data Kamus Antonim dengan ID ${id} berhasil diubah`,
-            data: updateKamusAntonim.data
+            message: `Sukses, Data home synonim dengan ID ${id} berhasil diubah`,
+            data: UpdateHa
         });
     } catch (error) {
         res.json({
@@ -140,37 +136,34 @@ exports.update = async (req, res) => {
             data: null
         });
     }
-}  
+}
 
 exports.delete = async (req, res) => {
     const id = req.params.id;
-    const nomor = await KamusAntonim.count({ where: { id: id } });
+    const nomor = await HomeSynonim.count({ where: { id: id } });
     if (isNaN(id)) {
         res.json({
             status: 200,
-            message: "Id harus berupa angka",
+            message: "Sepertinya ada terlewat, coba ulang dan tidak boleh kosong!",
             data: null
         });
         return;
-    }
-    else if (nomor == 0) {
-        res.json({
-            status: 404,
-            message: "Id tidak ditemukan",
+    } else if (nomor == 0) {
+        res.status(404).json({
+            status: 400,
+            message: "Sepertinya ada terlewat, coba ulang dan tidak boleh kosong!",
             data: null
         });
         return;
     }
     try {
-        const deleteKamusAntonim = await KamusAntonim.destroy({
-            where: { id: id }
-        });
+        const DeleteHa = await HomeSynonim.destroy({ where: { id: id } });
         res.json({
             status: 200,
-            message: `Sukses, Data Kamus Antonim dengan ID ${id} berhasil dihapus`,
-            data: deleteKamusAntonim
+            message: `Sukses, Data home synonim dengan ID ${id} berhasil dihapus`,
+            data: DeleteHa
         });
-    }catch (error) {
+    } catch (error) {
         res.json({
             status: 500,
             message: error.message || "Server Error",

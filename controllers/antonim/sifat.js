@@ -1,11 +1,10 @@
 const db = require('../../models');
 const SifatAntonim = db.santonims;
-const { Sequelize } = require('sequelize');
 
 exports.create = async (req, res) => {
     if (!req.body.oposisiMajemuk || !req.body.opsisiKembar || !req.body.oposisiGradual || !req.body.oposisiInversi || !req.body.oposisiHirarkis || !req.body.oposisiRelasional) {
         res.json({
-            status: 400,
+            status: 200,
             message: "Sepertinya ada terlewat, coba ulang dan tidak boleh kosong!",
             data: null
         });
@@ -19,16 +18,17 @@ exports.create = async (req, res) => {
         oposisiHirarkis: req.body.oposisiHirarkis,
         oposisiRelasional: req.body.oposisiRelasional,
     };
-
     try {
         const Createsa = await SifatAntonim.create(CekSifatAntonim);
-        res.json({
+        res.status(201).json({
+            status: 201,
             message: "Sukses, Data sifat antonim berhasil ditambahkan",
             data: Createsa
         });
     }
     catch (error) {
         res.json({
+            status: 500,
             message: error.message || "Server Error",
             data: null
         });
@@ -39,6 +39,7 @@ exports.getAll = async (req, res) => {
     try {
         const Getsa = await SifatAntonim.findAll();
         res.json({
+            status: 200,
             message: "Suksess, Semua data sifat antonim berhasil ditemukan",
             data: Getsa
         });
@@ -53,41 +54,41 @@ exports.getAll = async (req, res) => {
 }
 
 // //optional, mau dipake atau engga
-exports.getById = async (req, res) => {
-    const id = req.params.id;
-    const nomor = await SifatAntonim.count({ where: { id: id } });
+// exports.getById = async (req, res) => {
+//     const id = req.params.id;
+//     const nomor = await SifatAntonim.count({ where: { id: id } });
 
-    if (isNaN(id)) {
-        res.json({
-            status: 400,
-            message: "Id harus berupa angka",
-            data: null
-        });
-        return;
-    } else if (nomor == 0) {
-        res.json({
-            status: 404,
-            message: "Data tidak ditemukan",
-            data: null
-        });
-        return;
-    }else {
-        try {
-            const Getsa = await SifatAntonim.findByPk(id);
-            res.json({
-                message: "Sukses, Data sifat antonim berhasil ditemukan",
-                data: Getsa
-            });
-        }
-        catch (error) {
-            res.json({
-                status: 500,
-                message: error.message || "Server Error",
-                data: null
-            });
-        }
-    }
-}
+//     if (isNaN(id)) {
+//         res.json({
+//             status: 400,
+//             message: "Id harus berupa angka",
+//             data: null
+//         });
+//         return;
+//     } else if (nomor == 0) {
+//         res.json({
+//             status: 404,
+//             message: "Data tidak ditemukan",
+//             data: null
+//         });
+//         return;
+//     } else {
+//         try {
+//             const Getsa = await SifatAntonim.findByPk(id);
+//             res.json({
+//                 message: "Sukses, Data sifat antonim berhasil ditemukan",
+//                 data: Getsa
+//             });
+//         }
+//         catch (error) {
+//             res.json({
+//                 status: 500,
+//                 message: error.message || "Server Error",
+//                 data: null
+//             });
+//         }
+//     }
+// }
 
 exports.update = async (req, res) => {
     const id = req.params.id;
@@ -95,14 +96,14 @@ exports.update = async (req, res) => {
 
     if (isNaN(id)) {
         res.json({
-            status: 400,
+            status: 200,
             message: "Id harus berupa angka",
             data: null
         });
         return;
     }
     else if (nomor == 0) {
-        res.json({
+        res.status(404).json({
             status: 404,
             message: "Data tidak ditemukan",
             data: null
@@ -112,7 +113,7 @@ exports.update = async (req, res) => {
 
     if (!req.body.oposisiMajemuk || !req.body.opsisiKembar || !req.body.oposisiGradual || !req.body.oposisiInversi || !req.body.oposisiHirarkis || !req.body.oposisiRelasional) {
         res.json({
-            status: 400,
+            status: 200,
             message: "Sepertinya ada terlewat, coba ulang dan tidak boleh kosong!",
             data: null
         });
@@ -130,8 +131,9 @@ exports.update = async (req, res) => {
 
     try {
         const Updatesa = await SifatAntonim.update(CekSifatAntonim, { where: { id: id } });
-        res.json({
-            message: "Sukses, Data sifat antonim berhasil diubah",
+        res.status(201).json({
+            status: 201,
+            message: `Sukses, Data sifat antonim berhasil dengan id ke ${id} diubah`,
             data: Updatesa
         });
     }
@@ -146,7 +148,6 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
     const id = req.params.id;
     const nomor = await SifatAntonim.count({ where: { id: id } });
-
     if (isNaN(id)) {
         res.json({
             status: 400,
@@ -163,15 +164,16 @@ exports.delete = async (req, res) => {
         });
         return;
     }
-
     try {
         const Deletesa = await SifatAntonim.destroy({ where: { id: id } });
         res.json({
-            message: "Sukses, Data sifat antonim berhasil dihapus",
+            status: 200,
+            message: `Sukses, Data sifat antonim dengan ID ${id}berhasil dihapus1`,
             data: Deletesa
         });
     } catch (error) {
         res.json({
+            status: 500,
             message: error.message || "Server Error",
             data: null
         });

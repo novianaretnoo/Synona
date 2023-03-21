@@ -1,11 +1,10 @@
 const db = require('../../models');
 const JenisSynon = db.jsynonims;
-const { Sequelize } = require('sequelize');
 
 exports.create = async (req, res) => {
     if (!req.body.synonimMutlak || !req.body.synonimSemirip || !req.body.synonimSelingkung) {
         res.json({
-            status: 400,
+            status: 200,
             message: "Sepertinya ada terlewat, coba ulang dan tidak boleh kosong!",
             data: null
         });
@@ -19,12 +18,14 @@ exports.create = async (req, res) => {
 
     try {
         const Createjs = await JenisSynon.create(CekJenisSynonim);
-        res.json({ 
+        res.status(201).json({ 
+            status: 201,
             message: "Sukses, Data jenis synonim berhasil ditambahkan", 
             data: Createjs 
         });
     }catch (error) {
         res.json({ 
+            status: 500,
             message: error.message || "Server Error", 
             data: null 
         });
@@ -35,6 +36,7 @@ exports.getAll = async (req, res) => {
     try {
         const GetDatajs = await JenisSynon.findAll();
         res.json({ 
+            status: 200,
             message: "Suksess, Semua data Jenis Synonim berhasil ditemukan", 
             data: GetDatajs 
         });
@@ -117,6 +119,7 @@ exports.update = async (req, res) => {
     try {
         const updatejs = await JenisSynon.update(CekJenisSynonim, { where: { id: id } });
         res.json({ 
+            status: 200,
             message: `Suksess, Data jenis synonim dengan id ${id} berhasil diupdate`, 
             data: updatejs 
         });
@@ -148,8 +151,9 @@ exports.delete = async (req, res) => {
     try {
         const deletejs = await JenisSynon.destroy({ where: { id: id } });
         res.json({ 
-                message: `Suksess, Data dengan id ${id} berhasil dihapus`, 
-                data: deletejs 
+            status: 200,
+            message: `Suksess, Data dengan id ${id} berhasil dihapus`, 
+            data: deletejs 
         });
     } catch (error) {
         res.json({ 
