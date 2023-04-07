@@ -26,6 +26,6 @@ app.get('/', (req, res) => {
 app.use('/api/quizzes', quizRoute)
 app.use('/api/jobsheet', jobsheetRoute)
 app.use('/api/synonim', synonimRoute)
-app.use('/api/antonim', antonimRoute)
+app.use('/api/antonim', antonimRoute);
 
-app.listen(port, () => console.log(`App listening on port http://localhost:${port}!`));
+app.listen(port, () => console.log(`App listening on port http://localhost:${port}!`), "10.212.79.177:5000");

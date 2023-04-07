@@ -47,10 +47,17 @@ exports.findOne = async (req, res) => {
     //mengambil parameter yg dibaca di const id
     const id = req.params.id
     try {
-        const quiz = await Quiz.findByPk(id, {rejectOnEmpty: true})
+        const quiz = await Quiz.findByPk(id, { rejectOnEmpty: true })
+        let options = [];
+        options.push(quiz.a, quiz.b, quiz.c, quiz.d);
+        let correct_option = quiz.key;
+        let quiizzz = { "id": quiz.id, "soal": quiz.quiz };
+        console.log(options);
         res.json({
             message: `Quizzes retrieved successfully with id=${id}`,
-            data: quiz
+            data: quiizzz,
+            options: options,
+            correct_option: correct_option
         })
     }
     catch (error) {
@@ -65,10 +72,10 @@ exports.update = async (req, res) => {
     //di url kita menambah parameter, yg mana parameter tersebut disimpan di const id
     const id = req.params.id
     try {
-        const quiz = await Quiz.findByPk(id, {rejectOnEmpty: true})
+        const quiz = await Quiz.findByPk(id, { rejectOnEmpty: true })
         //quiz nya diupdate dari merequest body lalu disimpan berdasarkan id nya
         quiz.update(req.body, {
-            where: {id}
+            where: { id }
         })
         res.json({
             message: "Quizzes updated successfully",
@@ -86,7 +93,7 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
     const id = req.params.id
     try {
-        const quiz = await Quiz.findByPk(id, {rejectOnEmpty: true})
+        const quiz = await Quiz.findByPk(id, { rejectOnEmpty: true })
         quiz.destroy()
         res.json({
             message: 'Quiz deleted successfully'
